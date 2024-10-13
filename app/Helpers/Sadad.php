@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -31,6 +32,18 @@ class Sadad
     {
         return  $this->http->get("/GetServiceInfoByBiller?deviceNo=xxx&BillerName=" . $service);
     }
+    public function serviceDetails($service)
+    {
+        $response1 =  $this->http->get("/GetServiceDetailsByServiceID?deviceNo=xxx&ServiceID=" . $service);
+        $response =  $this->http->get("/GetServiceCategoriesByServiceID?deviceNo=xxx&ServiceID=" . $service);
+
+        return [
+            'input' => Arr::first($response1->json()),
+            'cat' => $response->json(),
+        ];
+
+    }
+
     public function inquire($data)
     {
         return  $this->http->asForm()->post("/Inquire", $data);

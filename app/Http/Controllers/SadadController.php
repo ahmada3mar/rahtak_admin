@@ -131,18 +131,7 @@ class SadadController extends Controller
     public function serviceDetails($service)
     {
 
-        $token = (new Sadad())->getToken();
-        $response = Http::withToken($token)
-            ->get("/GetServiceDetailsByServiceID?deviceNo=xxx&ServiceID=" . $service);
-        $input = $response->json();
+        return (new Sadad())->serviceDetails($service);
 
-        $response = Http::withToken($token)
-            ->get("/GetServiceCategoriesByServiceID?deviceNo=xxx&ServiceID=" . $service);
-        $cat = $response->json();
-
-        return [
-            'input' => Arr::first($input),
-            'cat' => $cat,
-        ];
     }
 }
