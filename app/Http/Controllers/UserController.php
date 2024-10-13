@@ -52,7 +52,6 @@ class UserController extends AdminController
         $data['password'] = bcrypt($request->password);
         $user = User::create($data);
         $user->assignRole($data['roles']);
-        $user->merchants()->sync($data['merchants']);
         return $user;
     }
 
@@ -74,7 +73,6 @@ class UserController extends AdminController
         }
         $user->update($data);
         $user->syncRoles($data['roles']);
-        $user->merchants()->sync($data['merchants']);
 
         return $user;
     }
