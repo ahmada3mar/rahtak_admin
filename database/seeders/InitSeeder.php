@@ -49,7 +49,7 @@ class InitSeeder extends Seeder
 
         $branch = Branch::updateOrCreate(['name'=>'طبربور']);
 
-        if (is_null($adminEmail)) {
+        if (!($adminEmail)) {
             throw new \InvalidArgumentException('Mobile parameter must be provided!');
         }
 
@@ -106,6 +106,32 @@ class InitSeeder extends Seeder
 
 
 
+
+        Permission::updateOrCreate([
+            'group' => 'Services',
+            'name' =>   'view sadad',
+        ], [
+            'description' => 'Allow the user to view sadad'
+        ]);
+        Permission::updateOrCreate([
+            'group' => 'Services',
+            'name' =>   'view cliq',
+        ], [
+            'description' => 'Allow the user to view cliQ'
+        ]);
+        Permission::updateOrCreate([
+            'group' => 'Services',
+            'name' =>   'view taxiF',
+        ], [
+            'description' => 'Allow the user to view taxiF'
+        ]);
+
+        Permission::updateOrCreate([
+            'group' => 'Services',
+            'name' =>   'view services',
+        ], [
+            'description' => 'Allow the user to view all services'
+        ]);
 
 
 

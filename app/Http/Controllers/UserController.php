@@ -66,7 +66,7 @@ class UserController extends AdminController
     public function update(UserRequest $request, User $user)
     {
         $data = $request->validated();
-        if ($data['password']) {
+        if (\array_key_exists('password', $data)) {
             $data['password'] = bcrypt($request->password);
         } else {
             unset($data['password']);
