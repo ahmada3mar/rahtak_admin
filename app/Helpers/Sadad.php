@@ -20,22 +20,27 @@ class Sadad
 
     public function billerType()
     {
-        return  $this->http->get("/GetBillerType?deviceNo=xxx");
+        return  $this->http->get("/Payment/GetBillerType?deviceNo=xxx");
+    }
+
+    public function finance()
+    {
+        return  $this->http->get("/Home/GetFinancialInfo");
     }
 
     public function billerInfo($type)
     {
-        return  $this->http->get("/GetBillerInfo?deviceNo=xxx&BillerType=" . $type);;
+        return  $this->http->get("/Payment/GetBillerInfo?deviceNo=xxx&BillerType=" . $type);;
     }
 
     public function serviceInfo($service)
     {
-        return  $this->http->get("/GetServiceInfoByBiller?deviceNo=xxx&BillerName=" . $service);
+        return  $this->http->get("/Payment/GetServiceInfoByBiller?deviceNo=xxx&BillerName=" . $service);
     }
     public function serviceDetails($service)
     {
-        $response1 =  $this->http->get("/GetServiceDetailsByServiceID?deviceNo=xxx&ServiceID=" . $service);
-        $response =  $this->http->get("/GetServiceCategoriesByServiceID?deviceNo=xxx&ServiceID=" . $service);
+        $response1 =  $this->http->get("/Payment/GetServiceDetailsByServiceID?deviceNo=xxx&ServiceID=" . $service);
+        $response =  $this->http->get("/Payment/GetServiceCategoriesByServiceID?deviceNo=xxx&ServiceID=" . $service);
 
         return [
             'input' => Arr::first($response1->json()),
@@ -46,12 +51,12 @@ class Sadad
 
     public function inquire($data)
     {
-        return  $this->http->asForm()->post("/Inquire", $data);
+        return  $this->http->asForm()->post("/Payment/Inquire", $data);
     }
 
     public function pay($data)
     {
-        return  $this->http->asForm()->post("/pay", $data);
+        return  $this->http->asForm()->post("/Payment/pay", $data);
     }
 
     private function login()
@@ -64,7 +69,7 @@ class Sadad
             'LanguageId' =>2
         ];
 
-        $response = Http::asForm()->post("https://sadad.prosysjo.com/POS/User/v1/LoginPOS" , $data);
+        $response = Http::asForm()->post(config('app.sadad_url') ."/User/v1/LoginPOS" , $data);
 
         if($response->json('errorMessage')){
             throw new HttpException(400 ,$response->json('errorMessage') );
@@ -79,7 +84,7 @@ class Sadad
             return Cache::get('sadad_token');
         }else{
             $token = $this->login();
-            Cache::put('sadad_token' , $token);
+            Cache::put('sadad_token' , $token , 600);
             return $token;
         }
     }

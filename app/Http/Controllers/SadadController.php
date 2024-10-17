@@ -8,28 +8,38 @@ use App\Models\Service;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class SadadController extends Controller
 {
+    public function finance()
+    {
+        $sadad = (new Sadad());
+        return  $sadad->finance()->json();
+    }
+
     public function billerType()
     {
-        $response = (new Sadad())->billerType();
-        return $response->json();
+        $sadad = (new Sadad());
+        $response = $sadad->billerType();
+        return \array_merge(["data"=>$response->json() ], $sadad->finance()->json());
     }
 
     public function billerInfo($type)
     {
-        $response = (new Sadad())->billerInfo($type);
-        return $response->json();
-
+        $sadad = (new Sadad());
+        $response = $sadad->billerInfo($type);
+        return \array_merge(["data"=>$response->json() ], $sadad->finance()->json());
     }
 
     public function serviceInfo($service)
     {
-        $response = (new Sadad())->serviceInfo($service);
-        return $response->json();
+        $sadad = (new Sadad());
+        $response = $sadad->serviceInfo($service);
+        return \array_merge(["data"=>$response->json() ], $sadad->finance()->json());
+
     }
 
     public function inquire(Request $request)
@@ -56,14 +66,17 @@ class SadadController extends Controller
             'remoteIP' => "",
         ];
 
-        $response = (new Sadad())->inquire($data);
+
+        $sadad = (new Sadad());
+        $response = $sadad->inquire($data);
 
         if (!$response->json('amount')) {
             \info(\json_encode( $request->json()));
             throw new HttpException(400, 'لا يوجد معلومات');
         }
 
-        return $response->json();
+        return \array_merge(["data"=>$response->json() ], $sadad->finance()->json());
+
     }
 
 
@@ -110,6 +123,8 @@ class SadadController extends Controller
         Transaction::create([
             'customer_id' => $customer->id,
             'service_id' => $service->id,
+            'user_id'=> Auth::user()->id,
+            'branch_id'=> Auth::user()->branch_id,
             'amount' => $request->amount,
             'fees' => $request->fees,
             'additional_amount' => $request->additionalAmount,
@@ -117,7 +132,8 @@ class SadadController extends Controller
         ]);
 
 
-        $response = (new Sadad())->pay($data);
+        $sadad = (new Sadad());
+        $response = $sadad->pay($data);
 
 
         if ($response->json('errorMsg')) {
@@ -125,13 +141,11 @@ class SadadController extends Controller
         }
 
 
-        return $response->json();
+        return \array_merge(["data"=>$response->json() ], $sadad->finance()->json());
     }
 
     public function serviceDetails($service)
     {
-
         return (new Sadad())->serviceDetails($service);
-
     }
 }

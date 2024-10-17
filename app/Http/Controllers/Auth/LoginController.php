@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\Sadad;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -95,7 +96,8 @@ class LoginController extends Controller
     protected function createNewToken($token)
     {
         $user = auth()->user();
-        return response()->json([
+        return response()->json(
+            \array_merge([
             'user' => [
                 'id' => $user->id,
                 'fullName' =>  $user->name,
@@ -109,12 +111,12 @@ class LoginController extends Controller
                 }),
             ],
             'token' => $token,
-        ]);
+        ] , (new Sadad)->finance()->json()));
     }
 
     public function user()
     {
         $user = auth()->user();
-        return new UserResource($user);
+        return \array_merge(['data' => new UserResource($user)] ,(new Sadad)->finance()->json() );
     }
 }

@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller(SadadController::class)
 ->middleware(TokenMiddleware::class)
 ->prefix('sadad')->group(function(){
+    Route::get('get-balance' , 'finance' );
     Route::get('get-biller-type' , 'billerType' );
     Route::get('get-biller-type/{type}' , 'billerInfo' );
     Route::get('get-service-info/{service}' , 'serviceInfo' );
