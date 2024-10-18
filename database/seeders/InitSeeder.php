@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Helpers\Sadad;
 use App\Models\Branch;
+use App\Models\Customer;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\Service;
@@ -32,7 +33,8 @@ class InitSeeder extends Seeder
             Role::class,
             Permission::class,
             Transaction::class,
-            Branch::class
+            Branch::class,
+            Customer::class
             // ... // List all your Models you want to have Permissions for.
         ]);
 

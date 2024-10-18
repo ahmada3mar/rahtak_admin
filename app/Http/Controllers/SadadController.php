@@ -24,33 +24,32 @@ class SadadController extends Controller
     {
         $sadad = (new Sadad());
         $response = $sadad->billerType();
-        return \array_merge(["data"=>$response->json() ], $sadad->finance()->json());
+        return \array_merge(["info" => $response->json()], $sadad->finance()->json());
     }
 
     public function billerInfo($type)
     {
         $sadad = (new Sadad());
         $response = $sadad->billerInfo($type);
-        return \array_merge(["data"=>$response->json() ], $sadad->finance()->json());
+        return \array_merge(["info" => $response->json()], $sadad->finance()->json());
     }
 
     public function serviceInfo($service)
     {
         $sadad = (new Sadad());
         $response = $sadad->serviceInfo($service);
-        return \array_merge(["data"=>$response->json() ], $sadad->finance()->json());
-
+        return \array_merge(["info" => $response->json()], $sadad->finance()->json());
     }
 
     public function inquire(Request $request)
     {
 
-        $data = [
+        $info = [
             'deviceNo' => "xxx",
             'paymentType' => $request->paymentType,
             'prepaidCategory' => $request->catValue,
             'containsPrepaidCats' => $request->containsPrepaidCats ? 'true' : 'false',
-            'billingNoRequired' =>$request->billingNoRequired ? 'true' : 'false',
+            'billingNoRequired' => $request->billingNoRequired ? 'true' : 'false',
             'billingNo' => $request->billingNo,
             'billerName' => $request->service,
             'serviceId' => $request->id, // Assuming you're using Laravel's routing helper
@@ -68,15 +67,14 @@ class SadadController extends Controller
 
 
         $sadad = (new Sadad());
-        $response = $sadad->inquire($data);
+        $response = $sadad->inquire($info);
 
         if (!$response->json('amount')) {
-            \info(\json_encode( $request->json()));
+            \info(\json_encode($request->json()));
             throw new HttpException(400, 'لا يوجد معلومات');
         }
 
-        return \array_merge(["data"=>$response->json() ], $sadad->finance()->json());
-
+        return \array_merge(["info" => $response->json()], $sadad->finance()->json());
     }
 
 
@@ -88,7 +86,7 @@ class SadadController extends Controller
             ['name' => $request->clientName]
         );
 
-        $data = [
+        $info = [
             'posId' => 57128,
             'totalPayment' => $request->totalPayment,
             'dueAmount' => $request->dueAmount,
@@ -120,28 +118,37 @@ class SadadController extends Controller
             'deviceNo' => "xxx",
         ];
 
-        Transaction::create([
-            'customer_id' => $customer->id,
-            'service_id' => $service->id,
-            'user_id'=> Auth::user()->id,
-            'branch_id'=> Auth::user()->branch_id,
-            'amount' => $request->amount,
-            'fees' => $request->fees,
-            'additional_amount' => $request->additionalAmount,
-            'rahtak_fees' => $request->rahtak_fees,
-        ]);
-
 
         $sadad = (new Sadad());
-        $response = $sadad->pay($data);
+        $response = $sadad->pay($info);
 
 
         if ($response->json('errorMsg')) {
             throw new HttpException(400, $response->json('errorMsg'));
         }
 
+        Transaction::create([
+            'customer_id' => $customer->id,
+            'service_id' => $service->id,
+            'user_id' => Auth::user()->id,
+            'branch_id' => Auth::user()->branch_id ?? 1,
+            'amount' => $request->amount,
+            'fees' => $request->fees,
+            'additional_amount' => $request->additionalAmount,
+            'rahtak_fees' => $request->rahtak_fees,
+            'bankTrxID' => $response->json('bankTrxID'),
+            'invoice' => $request->billingNo,
+        ]);
 
-        return \array_merge(["data"=>$response->json() ], $sadad->finance()->json());
+
+        return \array_merge(
+            ["info" => \array_merge(
+                $response->json(),
+                ["customerName" => $customer->name]
+            )],
+            $sadad->finance()->json(),
+
+        );
     }
 
     public function serviceDetails($service)

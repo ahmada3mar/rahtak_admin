@@ -97,26 +97,27 @@ class LoginController extends Controller
     {
         $user = auth()->user();
         return response()->json(
-            \array_merge([
-            'user' => [
-                'id' => $user->id,
-                'fullName' =>  $user->name,
-                'username' =>  $user->email,
-                'mobile' =>  $user->mobile,
-                'permissions' => $user->getAllPermissions()->map(function ($value) {
-                    return [
-                        'name' => $value->name,
-                        'group' => $value->group,
-                    ];
-                }),
-            ],
-            'token' => $token,
-        ] , (new Sadad)->finance()->json()));
+            array_merge(["info"=>[
+                'user' => [
+                    'id' => $user->id,
+                    'fullName' =>  $user->name,
+                    'username' =>  $user->email,
+                    'mobile' =>  $user->mobile,
+                    'permissions' => $user->getAllPermissions()->map(function ($value) {
+                        return [
+                            'name' => $value->name,
+                            'group' => $value->group,
+                        ];
+                    }),
+                ],
+                'token' => $token,
+            ] ], (new Sadad)->finance()->json())
+        );
     }
 
     public function user()
     {
         $user = auth()->user();
-        return \array_merge(['data' => new UserResource($user)] ,(new Sadad)->finance()->json() );
+        return \array_merge(['info' => new UserResource($user)] ,(new Sadad)->finance()->json() );
     }
 }

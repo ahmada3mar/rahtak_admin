@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('branches', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->timestamps();
+        Schema::table('transactions', function (Blueprint $table) {
+            $table->string('bankTrxID')->nullable();
+            $table->string('invoice')->nullable();
         });
     }
 
@@ -27,6 +26,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('branchs');
+        Schema::table('transactions', function (Blueprint $table) {
+            //
+        });
     }
 };

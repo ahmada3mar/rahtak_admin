@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SadadController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\TokenMiddleware;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,14 +37,19 @@ Route::controller(SadadController::class)
 });
 
 Route::middleware(TokenMiddleware::class)->group(function () {
+    Route::get('get-customer', function(Request $request){
+        return Customer::whereMobile($request->search)->first();
+    });
     Route::get('/user',  [LoginController::class, 'user']);
     Route::resource('users', UserController::class);
+    Route::resource('customers', CustomerController::class);
     Route::resource('transactions', TransactionController::class);
     Route::get('transactions-count', [TransactionController::class, 'getCount']);
     Route::post('/refresh-token', [LoginController::class, 'refresh']);
     Route::resource('roles', RoleController::class);
     Route::resource('branches', BranchController::class);
     Route::resource('permissions', PermissionController::class);
+
 });
 
 
