@@ -11,10 +11,10 @@ class Transaction extends Model
 
     protected $casts = [
         'created_at' => 'datetime: Y-m-d H:i:s',
-        'amount' => 'decimal:2',
-        'fees' => 'decimal:2',
-        'rahtak_fees' => 'decimal:2',
-        'additional_amount' => 'decimal:2',
+        'amount' => 'decimal:3',
+        'fees' => 'decimal:3',
+        'rahtak_fees' => 'decimal:3',
+        'additional_amount' => 'decimal:3',
     ] ;
     protected $fillable = [
         'customer_id',
