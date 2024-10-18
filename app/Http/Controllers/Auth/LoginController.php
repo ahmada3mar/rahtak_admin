@@ -24,7 +24,7 @@ class LoginController extends Controller
         ]);
 
         if (!$token = auth()->attempt($data)) {
-            return response()->json(['message' => 'mobile or password are incorrect'], 422);
+            return response()->json(['message' => 'رقم الهاتف او كلمة المرور غير صحيحة'], 422);
         }
 
         return $this->createNewToken($token);
