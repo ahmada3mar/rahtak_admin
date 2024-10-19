@@ -76,4 +76,9 @@ class User extends Authenticatable implements JWTSubject, AuthenticatableContrac
     {
         return $this->hasMany(Transaction::class);
     }
+
+    public function fav()
+    {
+        return $this->belongsToMany(Service::class);
+    }
 }

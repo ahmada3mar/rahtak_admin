@@ -14,6 +14,13 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class SadadController extends Controller
 {
+    public function addFav(Service $service)
+    {
+        $user = Auth::user();
+        $user->fav()->syncWithoutDetaching($service->id);
+        return $user->fav;
+    }
+
     public function finance()
     {
         $sadad = (new Sadad());

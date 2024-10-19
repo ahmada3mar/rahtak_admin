@@ -13,4 +13,14 @@ class Customer extends Model
         'name',
         'mobile'
     ];
+
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d | H:i a',
+
+    ];
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }

@@ -25,6 +25,7 @@ class UserResource extends JsonResource
                     'group' => $value->group,
                 ];
             }),
+            'fav'=> $this->fav
         ];
     }
 }

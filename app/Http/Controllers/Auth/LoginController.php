@@ -109,6 +109,7 @@ class LoginController extends Controller
                             'group' => $value->group,
                         ];
                     }),
+                    'fav' => $user->fav
                 ],
                 'token' => $token,
             ] ], (new Sadad)->finance()->json())

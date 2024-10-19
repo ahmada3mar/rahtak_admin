@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller(SadadController::class)
 ->middleware(TokenMiddleware::class)
 ->prefix('sadad')->group(function(){
+    Route::get('add-fav/{service}' , 'addFav' );
     Route::get('get-balance' , 'finance' );
     Route::get('get-biller-type' , 'billerType' );
     Route::get('get-biller-type/{type}' , 'billerInfo' );
@@ -38,7 +39,7 @@ Route::controller(SadadController::class)
 
 Route::middleware(TokenMiddleware::class)->group(function () {
     Route::get('get-customer', function(Request $request){
-        return Customer::whereMobile($request->search)->first();
+        return Customer::withCount('transactions')->whereMobile($request->search)->first();
     });
     Route::get('/user',  [LoginController::class, 'user']);
     Route::resource('users', UserController::class);
