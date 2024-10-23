@@ -103,6 +103,7 @@ class LoginController extends Controller
                     'fullName' =>  $user->name,
                     'username' =>  $user->email,
                     'mobile' =>  $user->mobile,
+                    'branch' => $user->branch->name,
                     'permissions' => $user->getAllPermissions()->map(function ($value) {
                         return [
                             'name' => $value->name,

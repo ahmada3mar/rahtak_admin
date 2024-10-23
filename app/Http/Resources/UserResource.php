@@ -19,6 +19,7 @@ class UserResource extends JsonResource
             'fullName' =>  $this->name,
             'username' =>  $this->email,
             'email' =>  $this->email,
+            'branch' => $this->branch->name,
             'permissions' => $this->getAllPermissions()->map(function ($value) {
                 return [
                     'name' => $value->name,
